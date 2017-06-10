@@ -14,17 +14,21 @@ const counter = (state = 0, action) => {
   }
 };
 
-const store = createStore(counter);
 console.log('state1', state = counter(state, { type: 'DECREMENT' }));
 console.log('state2', state = counter(state, { type: 'DECREMENT' }));
 console.log('state3', state = counter(state, { type: 'INCREMENT' }));
 console.log('state4', state = counter(state, { type: 'INCREMENT' }));
 console.log('state5', state = counter(state, { type: 'INCREMENT' }));
 
-  console.log('get state',store.getState());
+const store = createStore(counter);
+
+const render = () =>{
+  document.body.innerText = store.getState();
+};
+render();
+
+console.log('get state',store.getState());
 document.addEventListener('click', () => {
   store.dispatch({type: 'INCREMENT'});
 });
-store.subscribe(() => {
-  document.body.innerText = store.getState();
-});
+store.subscribe(render);
