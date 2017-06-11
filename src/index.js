@@ -62,8 +62,13 @@ const store = createStore(counter);
 console.log('state',store.getState());
 
 //Use React to make counter example
-const Counter = ({value})=>(
-  <h1>{value}</h1>
+//Added increment and decrement button
+const Counter = ({value, increment, decrement})=>(
+  <div>
+    <h1>{value}</h1>
+    <button onClick={increment}>increment</button>
+    <button onClick={decrement}>decrement</button>
+  </div>
 );
 
 
@@ -71,12 +76,18 @@ const Counter = ({value})=>(
 const renderElem = () =>{
   const state = store.getState();
   // return <Counter value= {state} />;
-  render(<Counter value={state}/>, document.getElementById('app'));
+  render(<Counter value={state}
+     increment = {() => {store.dispatch({type: 'INCREMENT'});}}
+     decrement = {() => {store.dispatch({type: 'DECREMENT'});}}
+
+    />, document.getElementById('app'));
 };
 
 console.log('get state',store.getState());
-document.addEventListener('click', () => {
-  store.dispatch({type: 'INCREMENT'});
-});
+// document.addEventListener('click', () => {
+//   store.dispatch({type: 'INCREMENT'});
+// });
+
+//We need to subscribe to the redux store so our render function would re-render when any state is changed
 store.subscribe(renderElem);
 renderElem();
