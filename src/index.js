@@ -1,3 +1,5 @@
+import React from 'react';
+import {render} from 'react-dom';
 // import { createStore } from 'redux';
 
 let state = 0;
@@ -59,13 +61,22 @@ const createStore = (reducer) => {
 const store = createStore(counter);
 console.log('state',store.getState());
 
-const render = () =>{
-  document.body.innerText = store.getState();
+//Use React to make counter example
+const Counter = ({value})=>(
+  <h1>{value}</h1>
+);
+
+
+
+const renderElem = () =>{
+  const state = store.getState();
+  // return <Counter value= {state} />;
+  render(<Counter value={state}/>, document.getElementById('app'));
 };
 
 console.log('get state',store.getState());
 document.addEventListener('click', () => {
   store.dispatch({type: 'INCREMENT'});
 });
-store.subscribe(render);
-render();
+store.subscribe(renderElem);
+renderElem();
