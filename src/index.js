@@ -28,12 +28,14 @@ const createStore = (reducer) => {
 
   console.log('called');
 
-  const getState = () => {
-    return reducer(state, {type:null}); //ugly
-  };
+  const getState = () => state;
 
   const subscribe = (listener) => {
     currentListeners.push(listener);
+    //returns an unsubscribe method that removes the listener from currentListeners array
+    return () => {
+      currentListeners.filter(thisListener => thisListener !== listener);
+    };
   };
 
   const dispatch = (action) => {
@@ -43,6 +45,10 @@ const createStore = (reducer) => {
     //call the listener subscribe to the chage of state
     currentListeners.forEach(listener=>listener());
   };
+
+  // to initialise the initial state, call the reducer function
+  dispatch({});
+
   return {
     getState,
     subscribe,
