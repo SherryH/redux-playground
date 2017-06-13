@@ -1,5 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
+import expect from 'expect';
+import deepFreeze from 'deep-freeze';
 // import { createStore } from 'redux';
 
 let state = 0;
@@ -91,3 +93,51 @@ console.log('get state',store.getState());
 //We need to subscribe to the redux store so our render function would re-render when any state is changed
 store.subscribe(renderElem);
 renderElem();
+
+
+
+//Avoid Array mutation
+//Add a state of 0 to list of Counters
+
+const addCounter = (list) => {
+  // return list.concat(0);
+  return [...list ,0]; //ES6 way of concatnating using spread
+};
+
+const testAddCounter = () => {
+  const listBefore = [];
+  const listAfter = [0];
+  deepFreeze(listBefore); // prevent list from being mutated
+  const newList = addCounter(listBefore);
+  expect(newList).toEqual(listAfter, 'List not equal');
+};
+testAddCounter();
+
+//Remove a counter from the list
+const removeCounter = (list, index) =>{
+  console.log([...list.slice(0, index), ...list.slice(index+1)])
+  return [...list.slice(0, index), ...list.slice(index+1)];
+};
+
+const testRemoveCounter = () => {
+  const listBefore = [0, 10, 20];
+  const listAfter = [0, 20];
+  deepFreeze(listBefore);
+  expect(removeCounter(listBefore, 1)).toEqual(listAfter,'List not equal after removal');
+};
+testRemoveCounter();
+
+//Increment a counter
+const incrementCounter = (list, index) => {
+  var newList = list.slice();
+  newList[index]++;
+  return newList;
+};
+
+const testIncrementCounter = () => {
+  const listBefore = [0, 10, 20];
+  const listAfter = [0, 11, 20];
+  deepFreeze(listBefore);
+  expect(incrementCounter(listBefore, 1)).toEqual(listAfter,'List not equal after Increment')
+};
+testIncrementCounter();
