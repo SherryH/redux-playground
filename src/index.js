@@ -141,3 +141,26 @@ const testIncrementCounter = () => {
   expect(incrementCounter(listBefore, 1)).toEqual(listAfter,'List not equal after Increment')
 };
 testIncrementCounter();
+
+//Avoid Object mutation
+// toggleTodo with Object.assign
+const toggleTodo = (todo) => {
+  return Object.assign({}, todo, {completed: !todo.completed});
+  // return {...todo, {completed: !todo.completed}}; //available in babel stage 2 preset ES7
+};
+
+const testToggleTodo = () => {
+  const todoBefore = {
+    id: 1,
+    text: 'Learn Redux',
+    completed: false
+  };
+  const todoAfter = {
+    id: 1,
+    text: 'Learn Redux',
+    completed: true
+  };
+  deepFreeze(todoBefore);
+  expect(toggleTodo(todoBefore)).toEqual(todoAfter, 'todo not Equal after toggle');
+};
+testToggleTodo();
