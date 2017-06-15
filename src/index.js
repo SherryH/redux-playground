@@ -164,3 +164,36 @@ const testToggleTodo = () => {
   expect(toggleTodo(todoBefore)).toEqual(todoAfter, 'todo not Equal after toggle');
 };
 testToggleTodo();
+
+//Add a todo List Reducer
+const todos = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_TODO':{
+      // const newState = state.slice();
+      // newState.push({id: action.id, text: action.text, completed: false});
+      // return newState;
+      return [...state, {id: action.id, text: action.text, completed: false}];
+    }
+    default:
+      return state;
+  }
+};
+
+const testAddTodo = () => {
+  const stateBefore = [];
+  const action = {
+    type: 'ADD_TODO',
+    id: 1,
+    text: 'Learn Redux'
+  };
+  const stateAfter = [{
+    id: 1,
+    text: 'Learn Redux',
+    completed: false
+  }];
+  deepFreeze(stateBefore);
+  deepFreeze(action);
+  expect(todos(stateBefore, action)).toEqual(stateAfter,'todo Reducer test failed');
+};
+
+testAddTodo();
