@@ -174,6 +174,17 @@ const todos = (state = [], action) => {
       // return newState;
       return [...state, {id: action.id, text: action.text, completed: false}];
     }
+    case 'TOGGLE_TODO':{
+      return state.map(todo => {
+        if (todo.id !== action.id) {
+          return todo;
+        }
+        return {
+          ...todo,
+          completed: !todo.completed
+        };
+      });
+    }
     default:
       return state;
   }
@@ -193,7 +204,37 @@ const testAddTodo = () => {
   }];
   deepFreeze(stateBefore);
   deepFreeze(action);
-  expect(todos(stateBefore, action)).toEqual(stateAfter,'todo Reducer test failed');
+  expect(todos(stateBefore, action)).toEqual(stateAfter,'add todo Reducer test failed');
 };
 
 testAddTodo();
+
+// Add a toggle todoList test
+const testToggleTodo2 = () => {
+  const stateBefore = [{
+    id: 0,
+    text: 'Learn Redux',
+    completed: false
+  },{
+    id: 1,
+    text: 'Cook dinner',
+    completed: false
+  }];
+  const action = {
+    type: 'TOGGLE_TODO',
+    id: 1
+  };
+  const stateAfter = [{
+    id: 0,
+    text: 'Learn Redux',
+    completed: false
+  },{
+    id: 1,
+    text: 'Cook dinner',
+    completed: true
+  }];
+  deepFreeze(stateBefore);
+  deepFreeze(action);
+  expect(todos(stateBefore, action)).toEqual(stateAfter,'toggle todo Reducer test failed');
+};
+testToggleTodo2();
