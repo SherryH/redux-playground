@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import expect from 'expect';
 import deepFreeze from 'deep-freeze';
 // import { createStore } from 'redux';
+import Todo from './Todo';
 
 let state = 0;
 
@@ -142,6 +143,15 @@ const testIncrementCounter = () => {
 };
 testIncrementCounter();
 
+
+
+
+// render a todo App
+render(<Todo/>, document.getElementById('todoapp'));
+
+
+
+
 //Avoid Object mutation
 // toggleTodo with Object.assign
 const toggleTodo = (todo) => {
@@ -166,7 +176,7 @@ const testToggleTodo = () => {
 testToggleTodo();
 
 //Add a todo List Reducer
-const todos = (state = [], action) => {
+const todos_old = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':{
       // const newState = state.slice();
@@ -189,6 +199,41 @@ const todos = (state = [], action) => {
       return state;
   }
 };
+
+// Reducer composition arrays
+// the above reducer is hard to read. it mixes 2 concerns: updating the todo array and updating individual todos. So break 'updating individual todo' to a separate function
+//the state here is a todo
+const todo = (state = {}, action) => {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return {id: action.id, text: action.text, completed: false};
+    case 'TOGGLE_TODO':{
+      return state => {
+        if (state.id !== action.id) {
+          return state;
+        }
+        return {
+          ...state,
+          completed: !state.completed
+        };
+      }
+    }
+  }
+};
+
+const todos = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_TODO':{
+      return [...state, todo({},action)];
+    }
+    case 'TOGGLE_TODO':{
+      return state.map(todo(todo, action));
+    }
+    default:
+      return state;
+  }
+};
+
 
 const testAddTodo = () => {
   const stateBefore = [];
