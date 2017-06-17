@@ -114,8 +114,7 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
 // we can implement our own combineReducers
 // I: an obj of reducers
 // O: a final reducer function taking state and action as input
-const myCombineReducers = (reducers) => {
-  console.log('reducers',reducers);
+const myCombineReducersForEach = (reducers) => {
   return (state = {}, action) => {
     //this myCombineReducer function, when called
     // pass the state and action to the list of reducers
@@ -125,6 +124,17 @@ const myCombineReducers = (reducers) => {
       nextState[reducer] = reducers[reducer](state[reducer], action);
     });
     return nextState;
+  };
+};
+
+//use Array reduce to produce final state
+// iterate through each reducer, updating the state
+const myCombineReducers = (reducers) => {
+  return (state = {}, action) => {
+    return Object.keys(reducers).reduce((nextState, reducer)=>{
+      nextState[reducer] = reducers[reducer](state[reducer], action);
+      return nextState;
+    }, {});
   };
 };
 
