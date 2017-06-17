@@ -67,14 +67,13 @@ const todo = (state = {}, action) => {
     case 'ADD_TODO':
       return {id: action.id, text: action.text, completed: false};
     case 'TOGGLE_TODO':{
-        if (state.id !== action.id) {
-          return state;
-        }
-        return {
-          ...state,
-          completed: !state.completed
-        };
-
+      if (state.id !== action.id) {
+        return state;
+      }
+      return {
+        ...state,
+        completed: !state.completed
+      };
     }
   }
 };
@@ -92,6 +91,24 @@ const todos = (state = [], action) => {
   }
 };
 
+//Visibility Filter Reducer - a reducer that decides what todo to show
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+  switch (action.type) {
+    case 'SET_VISIBILITY_FILTER':
+      return action.filter;
+    default:
+      return state;
+  }
+};
+
+//combine todo Reducer and Visibility Filter Reducer
+// returns a combined state with todos and visibilityFilter as key
+const todoApp = (state = {}, action) => {
+  return {
+    todos: todos(state.todos, action),
+    visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+  };
+};
 
 const testAddTodo = () => {
   const stateBefore = [];
@@ -144,7 +161,7 @@ testToggleTodo2();
 
 
 // create a store with the todos reducer
-const store = createStore(todos);
+const store = createStore(todoApp);
 console.log('Initial State:');
 console.log(store.getState()); //empty array
 console.log('Dispatching ADD_TODO');
@@ -170,6 +187,13 @@ store.dispatch({
   id: 3
 });
 console.log(store.getState()); //[{todo 2}, {todo 3 done}]
+console.log('---------------');
+console.log('Dispatching Visibility Filter');
+store.dispatch({
+  type: 'SET_VISIBILITY_FILTER',
+  filter: 'SHOW_COMPLETED'
+});
+console.log(store.getState());
 console.log('---------------');
 console.log('');
 
