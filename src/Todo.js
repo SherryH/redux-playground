@@ -1,7 +1,7 @@
 import React from 'react';
 import expect from 'expect';
 import deepFreeze from 'deep-freeze';
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 
 const Todo = () => {
 
@@ -103,12 +103,35 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
 
 //combine todo Reducer and Visibility Filter Reducer
 // returns a combined state with todos and visibilityFilter as key
-const todoApp = (state = {}, action) => {
-  return {
-    todos: todos(state.todos, action),
-    visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+// const todoApp = (state = {}, action) => {
+//   return {
+//     todos: todos(state.todos, action),
+//     visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+//   };
+// };
+
+// we can use a function to combine reducers - return obj with mapping between state and reducer
+// we can implement our own combineReducers
+// I: an obj of reducers
+// O: a final reducer function taking state and action as input
+const myCombineReducers = (reducers) => {
+  console.log('reducers',reducers);
+  return (state = {}, action) => {
+    //this myCombineReducer function, when called
+    // pass the state and action to the list of reducers
+    // mutate the state according to the action accordingly, returns the state
+    let nextState = {};
+    Object.keys(reducers).forEach((reducer)=>{
+      nextState[reducer] = reducers[reducer](state[reducer], action);
+    });
+    return nextState;
   };
 };
+
+const todoApp = myCombineReducers({
+  todos,
+  visibilityFilter
+});
 
 const testAddTodo = () => {
   const stateBefore = [];
