@@ -3,7 +3,7 @@ import {render} from 'react-dom';
 import expect from 'expect';
 import deepFreeze from 'deep-freeze';
 // import { createStore } from 'redux';
-import Todo from './Todo';
+import {Todo, todoStore } from './Todo';
 
 let state = 0;
 
@@ -147,7 +147,11 @@ testIncrementCounter();
 
 
 // render a todo App
-render(<Todo/>, document.getElementById('todoapp'));
-
-
+const renderTodo = () => {
+  render(<Todo/>, document.getElementById('todoapp'));
+};
+//subscribe to the state change and update view
+todoStore.subscribe(renderTodo);
+//initial rendering
+renderTodo();
 

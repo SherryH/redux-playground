@@ -194,40 +194,41 @@ testToggleTodo2();
 
 
 // create a store with the todos reducer
-const store = createStore(todoApp);
+const todoStore = createStore(todoApp);
+
 console.log('Initial State:');
-console.log(store.getState()); //empty array
+console.log(todoStore.getState()); //empty array
 console.log('Dispatching ADD_TODO');
-store.dispatch({
+todoStore.dispatch({
   type: 'ADD_TODO',
   id:2,
   text: 'Learn German'
 });
 console.log('Current State:');
-console.log(store.getState()); //[{todo 2}]
+console.log(todoStore.getState()); //[{todo 2}]
 console.log('--------------');
 console.log('Dispatching ADD_TODO');
-store.dispatch({
+todoStore.dispatch({
   type: 'ADD_TODO',
   id:3,
   text: 'Practice Speech'
 });
-console.log(store.getState()); //[{todo 2}, {todo 3}]
+console.log(todoStore.getState()); //[{todo 2}, {todo 3}]
 console.log('--------------');
 console.log('Dispatching Toggle Todo');
-store.dispatch({
+todoStore.dispatch({
   type: 'TOGGLE_TODO',
   id: 3
 });
-console.log(store.getState()); //[{todo 2}, {todo 3 done}]
+console.log(todoStore.getState()); //[{todo 2}, {todo 3 done}]
 console.log('---------------');
 console.log('Dispatching Visibility Filter');
-store.dispatch({
+todoStore.dispatch({
   type: 'SET_VISIBILITY_FILTER',
   filter: 'SHOW_COMPLETED'
 });
-console.log(store.getState());
+console.log(todoStore.getState());
 console.log('---------------');
 console.log('');
 
-export default Todo;
+export {Todo, todoStore};
