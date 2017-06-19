@@ -236,25 +236,59 @@ const generateId = () => {
 
 const idGenerator = generateId();
 
-const Todo = ({todos}) => {
-  return (
-    <div>
-      <div>This is an todo app </div>
-      <button onClick={()=>{
-        todoStore.dispatch({
-          type: 'ADD_TODO',
-          text: 'Test',
-          id: idGenerator.getId()
-        });
-        console.log(todoStore.getState());
-        console.log('todos',{todos});
-      }}>Add todo</button>
-      <ul>
-        {todos.map(todo=><li key={todo.id}>{todo.text}{todo.id}</li>)}
+// class Todo extends React.Component {
+//   constructor(props){
+//     super(props);
+//     this.textInput = null;
+//   }
+//   componentDillMount() {
+//     this.textInput.focus();
+//   }
+//   render(){
+//     return (
+//       <div>
+//         <div>This is an todo app </div>
+//         <input type="text" ref={input=>{this.textInput=input;}} />
+//         <button onClick={()=>{
+//           todoStore.dispatch({
+//             type: 'ADD_TODO',
+//             text: this.textInput.value,
+//             id: idGenerator.getId()
+//           });
+//           console.log(todoStore.getState());
+//           console.log('todo input');
+//         }}>Add todo</button>
+//         <ul>
+//           {this.props.todos.map(todo=><li key={todo.id}>{todo.text}{todo.id}</li>)}
 
-      </ul>
-    </div>
-  );
+//         </ul>
+//       </div>
+//     );
+//   }
+// }
+
+const Todo = ({todos}) => {
+  let textInput = null;
+      return (
+        <div>
+          <div>This is an todo app </div>
+          <input type="text" ref={input=>{textInput=input;}} />
+          <button onClick={()=>{
+            todoStore.dispatch({
+              type: 'ADD_TODO',
+              text: textInput.value,
+              id: idGenerator.getId()
+            });
+            console.log(todoStore.getState());
+            console.log('todo input');
+            textInput.value = '';
+          }}>Add todo</button>
+          <ul>
+            {todos.map(todo=><li key={todo.id}>{todo.text}{todo.id}</li>)}
+
+          </ul>
+        </div>
+      );
 };
 
 
