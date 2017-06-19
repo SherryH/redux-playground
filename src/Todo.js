@@ -3,13 +3,6 @@ import expect from 'expect';
 import deepFreeze from 'deep-freeze';
 import { createStore, combineReducers } from 'redux';
 
-const Todo = () => {
-
-  return (
-    <div>This is an todo app </div>
-  );
-};
-
 
 //Avoid Object mutation
 // toggleTodo with Object.assign
@@ -230,5 +223,39 @@ todoStore.dispatch({
 console.log(todoStore.getState());
 console.log('---------------');
 console.log('');
+
+const generateId = () => {
+  let todoId = 4;
+  const obj = {};
+  obj.id = 4;
+  obj.getId = () => {
+    return obj.id++;
+  }
+  return obj;
+};
+
+const idGenerator = generateId();
+
+const Todo = ({todos}) => {
+  return (
+    <div>
+      <div>This is an todo app </div>
+      <button onClick={()=>{
+        todoStore.dispatch({
+          type: 'ADD_TODO',
+          text: 'Test',
+          id: idGenerator.getId()
+        });
+        console.log(todoStore.getState());
+        console.log('todos',{todos});
+      }}>Add todo</button>
+      <ul>
+        {todos.map(todo=><li key={todo.id}>{todo.text}{todo.id}</li>)}
+
+      </ul>
+    </div>
+  );
+};
+
 
 export {Todo, todoStore};
