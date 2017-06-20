@@ -267,28 +267,41 @@ const idGenerator = generateId();
 //   }
 // }
 
+const TodoItem = ({todo}) => {
+  if (todo.completed){
+    return <strike>{todo.text}</strike>;
+  }
+  return <span>{todo.text}</span>;
+};
+
 const Todo = ({todos}) => {
   let textInput = null;
-      return (
-        <div>
-          <div>This is an todo app </div>
-          <input type="text" ref={input=>{textInput=input;}} />
-          <button onClick={()=>{
-            todoStore.dispatch({
-              type: 'ADD_TODO',
-              text: textInput.value,
-              id: idGenerator.getId()
-            });
-            console.log(todoStore.getState());
-            console.log('todo input');
-            textInput.value = '';
-          }}>Add todo</button>
-          <ul>
-            {todos.map(todo=><li key={todo.id}>{todo.text}{todo.id}</li>)}
+    return (
+      <div>
+        <div>This is an todo app </div>
+        <input type="text" ref={input=>{textInput=input;}} />
+        <button onClick={()=>{
+          todoStore.dispatch({
+            type: 'ADD_TODO',
+            text: textInput.value,
+            id: idGenerator.getId()
+          });
+          console.log(todoStore.getState());
+          console.log('todo input');
+          textInput.value = '';
+        }}>Add todo</button>
+        <ul>
+          {todos.map(todo=><li key={todo.id}
+            onClick={()=>{todoStore.dispatch({
+              type:'TOGGLE_TODO',
+              id: todo.id
+            });}}
+            ><TodoItem todo={todo}/>
+            </li>)}
 
-          </ul>
-        </div>
-      );
+        </ul>
+      </div>
+    );
 };
 
 
