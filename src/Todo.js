@@ -296,7 +296,8 @@ const Todo = ({todos}) => {
               type:'TOGGLE_TODO',
               id: todo.id
             });}}
-            ><TodoItem todo={todo}/>
+            style={{textDecoration: todo.completed?'line-through': 'none'}}>
+            {todo.text}
             </li>)}
 
         </ul>
