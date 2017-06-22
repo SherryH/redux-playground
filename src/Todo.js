@@ -267,6 +267,21 @@ const idGenerator = generateId();
 //   }
 // }
 
+//content between JSX open/closing tags are passed as props.children
+// a link component dispatching filter action, rendering custom text passed beteen FilterText
+const FilterLink = ({filter, children}) => {
+  return (
+    <a href='#' onClick={(e)=>{
+      e.preventDefault();
+      todoStore.dispatch({
+        type: "SET_VISIBILITY_FILTER",
+        filter
+      });
+    }}>{children}</a>
+  );
+}
+
+
 const TodoItem = ({todo}) => {
   if (todo.completed){
     return <strike>{todo.text}</strike>;
@@ -301,6 +316,11 @@ const Todo = ({todos}) => {
             </li>)}
 
         </ul>
+        <p>
+          <FilterLink filter={'SHOW_ALL'}>All</FilterLink>{'  '}
+          <FilterLink filter={'SHOW_COMPLETED'}>Completed</FilterLink>
+          <FilterLink filter={'SHOW_ACTIVE'}>Active</FilterLink>
+        </p>
       </div>
     );
 };
