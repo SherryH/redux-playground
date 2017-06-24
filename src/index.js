@@ -148,7 +148,7 @@ testIncrementCounter();
 
 // render a todo App
 const renderTodo = () => {
-  render(<Todo todos={todoStore.getState().todos}/>, document.getElementById('todoapp'));
+  render(<Todo {...todoStore.getState()}/>, document.getElementById('todoapp'));
 };
 //subscribe to the state change and update view
 todoStore.subscribe(renderTodo);

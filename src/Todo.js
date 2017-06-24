@@ -281,6 +281,20 @@ const FilterLink = ({filter, children}) => {
   );
 }
 
+// a function that filters the todos to display based on the filter state
+const getVisibleTodos = (todos, filter) => {
+  console.log('todos',todos);
+  console.log('filter',filter);
+  switch(filter) {
+    case "SHOW_COMPLETED":
+      return todos.filter(todo=>todo.completed);
+    case "SHOW_ACTIVE":
+      return todos.filter(todo=>!todo.completed);
+    default:
+      return todos;
+  }
+};
+
 
 const TodoItem = ({todo}) => {
   if (todo.completed){
@@ -289,8 +303,12 @@ const TodoItem = ({todo}) => {
   return <span>{todo.text}</span>;
 };
 
-const Todo = ({todos}) => {
+const Todo = ({todos, visibilityFilter}) => {
   let textInput = null;
+  console.log('passed todos', todos);
+  console.log('passed visibilityFilter', visibilityFilter);
+  const filteredTodos = getVisibleTodos(todos, visibilityFilter);
+  console.log('filteredTodos', filteredTodos);
     return (
       <div>
         <div>This is an todo app </div>
@@ -306,7 +324,7 @@ const Todo = ({todos}) => {
           textInput.value = '';
         }}>Add todo</button>
         <ul>
-          {todos.map(todo=><li key={todo.id}
+          {filteredTodos.map(todo=><li key={todo.id}
             onClick={()=>{todoStore.dispatch({
               type:'TOGGLE_TODO',
               id: todo.id
@@ -314,11 +332,10 @@ const Todo = ({todos}) => {
             style={{textDecoration: todo.completed?'line-through': 'none'}}>
             {todo.text}
             </li>)}
-
         </ul>
         <p>
           <FilterLink filter={'SHOW_ALL'}>All</FilterLink>{'  '}
-          <FilterLink filter={'SHOW_COMPLETED'}>Completed</FilterLink>
+          <FilterLink filter={'SHOW_COMPLETED'}>Completed</FilterLink>{'  '}
           <FilterLink filter={'SHOW_ACTIVE'}>Active</FilterLink>
         </p>
       </div>
