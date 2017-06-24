@@ -269,7 +269,10 @@ const idGenerator = generateId();
 
 //content between JSX open/closing tags are passed as props.children
 // a link component dispatching filter action, rendering custom text passed beteen FilterText
-const FilterLink = ({filter, children}) => {
+const FilterLink = ({filter, currentFilter, children}) => {
+  if (currentFilter === filter) {
+    return <span>{children}</span>
+  }
   return (
     <a href='#' onClick={(e)=>{
       e.preventDefault();
@@ -283,8 +286,6 @@ const FilterLink = ({filter, children}) => {
 
 // a function that filters the todos to display based on the filter state
 const getVisibleTodos = (todos, filter) => {
-  console.log('todos',todos);
-  console.log('filter',filter);
   switch(filter) {
     case "SHOW_COMPLETED":
       return todos.filter(todo=>todo.completed);
@@ -305,10 +306,7 @@ const TodoItem = ({todo}) => {
 
 const Todo = ({todos, visibilityFilter}) => {
   let textInput = null;
-  console.log('passed todos', todos);
-  console.log('passed visibilityFilter', visibilityFilter);
   const filteredTodos = getVisibleTodos(todos, visibilityFilter);
-  console.log('filteredTodos', filteredTodos);
     return (
       <div>
         <div>This is an todo app </div>
@@ -334,9 +332,9 @@ const Todo = ({todos, visibilityFilter}) => {
             </li>)}
         </ul>
         <p>
-          <FilterLink filter={'SHOW_ALL'}>All</FilterLink>{'  '}
-          <FilterLink filter={'SHOW_COMPLETED'}>Completed</FilterLink>{'  '}
-          <FilterLink filter={'SHOW_ACTIVE'}>Active</FilterLink>
+          <FilterLink filter={'SHOW_ALL'} currentFilter={visibilityFilter}>All</FilterLink>{',  '}
+          <FilterLink filter={'SHOW_COMPLETED'} currentFilter={visibilityFilter}>Completed</FilterLink>{',  '}
+          <FilterLink filter={'SHOW_ACTIVE'} currentFilter={visibilityFilter}>Active</FilterLink>
         </p>
       </div>
     );
