@@ -297,16 +297,30 @@ const getVisibleTodos = (todos, filter) => {
 };
 
 
-const TodoItem = ({todo}) => {
-  if (todo.completed){
-    return <strike>{todo.text}</strike>;
-  }
-  return <span>{todo.text}</span>;
+// const TodoItem = ({todo}) => {
+//   if (todo.completed){
+//     return <strike>{todo.text}</strike>;
+//   }
+//   return <span>{todo.text}</span>;
+// };
+
+const Todo = ({onClick, completed, text}) => {
+  return (
+    <li
+      onClick={onClick}
+      style={{textDecoration: completed?'line-through': 'none'}}>
+      {text}
+    </li>
+  );
 };
 
-const Todo = ({todos, visibilityFilter}) => {
+const TodoApp = ({todos, visibilityFilter}) => {
   let textInput = null;
   const filteredTodos = getVisibleTodos(todos, visibilityFilter);
+  const onClick = ()=>{todoStore.dispatch({
+    type:'TOGGLE_TODO',
+    id: todo.id
+  });}
     return (
       <div>
         <div>This is an todo app </div>
@@ -322,14 +336,7 @@ const Todo = ({todos, visibilityFilter}) => {
           textInput.value = '';
         }}>Add todo</button>
         <ul>
-          {filteredTodos.map(todo=><li key={todo.id}
-            onClick={()=>{todoStore.dispatch({
-              type:'TOGGLE_TODO',
-              id: todo.id
-            });}}
-            style={{textDecoration: todo.completed?'line-through': 'none'}}>
-            {todo.text}
-            </li>)}
+          {filteredTodos.map(todo=><Todo key={todo.id} {...todo} />)}
         </ul>
         <p>
           <FilterLink filter={'SHOW_ALL'} currentFilter={visibilityFilter}>All</FilterLink>{',  '}
@@ -341,4 +348,4 @@ const Todo = ({todos, visibilityFilter}) => {
 };
 
 
-export {Todo, todoStore};
+export {TodoApp, todoStore};
