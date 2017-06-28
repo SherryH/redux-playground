@@ -314,6 +314,15 @@ const Todo = ({onClick, completed, text}) => {
   );
 };
 
+const TodoList = ({todos}) => {
+  console.log('todolist debug',todos);
+  return (
+    <ul>
+      {todos.map(todo=><Todo key={todo.id} {...todo} />)}
+    </ul>
+  );
+};
+
 const TodoApp = ({todos, visibilityFilter}) => {
   let textInput = null;
   const filteredTodos = getVisibleTodos(todos, visibilityFilter);
@@ -335,9 +344,7 @@ const TodoApp = ({todos, visibilityFilter}) => {
           console.log('todo input');
           textInput.value = '';
         }}>Add todo</button>
-        <ul>
-          {filteredTodos.map(todo=><Todo key={todo.id} {...todo} />)}
-        </ul>
+        <TodoList todos={filteredTodos}/>
         <p>
           <FilterLink filter={'SHOW_ALL'} currentFilter={visibilityFilter}>All</FilterLink>{',  '}
           <FilterLink filter={'SHOW_COMPLETED'} currentFilter={visibilityFilter}>Completed</FilterLink>{',  '}
