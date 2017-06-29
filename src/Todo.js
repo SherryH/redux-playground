@@ -314,11 +314,11 @@ const Todo = ({onClick, completed, text}) => {
   );
 };
 
-const TodoList = ({todos}) => {
+const TodoList = ({todos, onClick}) => {
   console.log('todolist debug',todos);
   return (
     <ul>
-      {todos.map(todo=><Todo key={todo.id} {...todo} />)}
+      {todos.map(todo=><Todo key={todo.id} {...todo} onClick={()=>onClick(todo)}/>)}
     </ul>
   );
 };
@@ -326,7 +326,7 @@ const TodoList = ({todos}) => {
 const TodoApp = ({todos, visibilityFilter}) => {
   let textInput = null;
   const filteredTodos = getVisibleTodos(todos, visibilityFilter);
-  const onClick = ()=>{todoStore.dispatch({
+  const onClick = (todo)=>{todoStore.dispatch({
     type:'TOGGLE_TODO',
     id: todo.id
   });}
@@ -344,7 +344,7 @@ const TodoApp = ({todos, visibilityFilter}) => {
           console.log('todo input');
           textInput.value = '';
         }}>Add todo</button>
-        <TodoList todos={filteredTodos}/>
+        <TodoList todos={filteredTodos} onClick={onClick}/>
         <p>
           <FilterLink filter={'SHOW_ALL'} currentFilter={visibilityFilter}>All</FilterLink>{',  '}
           <FilterLink filter={'SHOW_COMPLETED'} currentFilter={visibilityFilter}>Completed</FilterLink>{',  '}
