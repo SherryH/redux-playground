@@ -323,27 +323,34 @@ const TodoList = ({todos, onClick}) => {
   );
 };
 
-const TodoApp = ({todos, visibilityFilter}) => {
+const TodoPanel = ({onAddClick}) => {
   let textInput = null;
+  return (
+    <div>
+      <div>This is an todo app </div>
+      <input type="text" ref={input=>{textInput=input;}} />
+      <button onClick={()=>onAddClick(textInput)}>Add todo</button>
+    </div>
+  );
+};
+
+const TodoApp = ({todos, visibilityFilter}) => {
   const filteredTodos = getVisibleTodos(todos, visibilityFilter);
   const onClick = (todo)=>{todoStore.dispatch({
     type:'TOGGLE_TODO',
     id: todo.id
   });}
+  const onAddClick = (textInput)=>{
+        todoStore.dispatch({
+          type: 'ADD_TODO',
+          text: textInput.value,
+          id: idGenerator.getId()
+        });
+        textInput.value = '';
+      }
     return (
       <div>
-        <div>This is an todo app </div>
-        <input type="text" ref={input=>{textInput=input;}} />
-        <button onClick={()=>{
-          todoStore.dispatch({
-            type: 'ADD_TODO',
-            text: textInput.value,
-            id: idGenerator.getId()
-          });
-          console.log(todoStore.getState());
-          console.log('todo input');
-          textInput.value = '';
-        }}>Add todo</button>
+        <TodoPanel onAddClick={onAddClick}/>
         <TodoList todos={filteredTodos} onClick={onClick}/>
         <p>
           <FilterLink filter={'SHOW_ALL'} currentFilter={visibilityFilter}>All</FilterLink>{',  '}
