@@ -334,6 +334,16 @@ const TodoPanel = ({onAddClick}) => {
   );
 };
 
+const Footer = ({visibilityFilter}) => {
+  return (
+    <p>
+      <FilterLink filter={'SHOW_ALL'} currentFilter={visibilityFilter}>All</FilterLink>{',  '}
+      <FilterLink filter={'SHOW_COMPLETED'} currentFilter={visibilityFilter}>Completed</FilterLink>{',  '}
+      <FilterLink filter={'SHOW_ACTIVE'} currentFilter={visibilityFilter}>Active</FilterLink>
+    </p>
+  );
+};
+
 const TodoApp = ({todos, visibilityFilter}) => {
   const filteredTodos = getVisibleTodos(todos, visibilityFilter);
   const onClick = (todo)=>{todoStore.dispatch({
@@ -352,11 +362,7 @@ const TodoApp = ({todos, visibilityFilter}) => {
       <div>
         <TodoPanel onAddClick={onAddClick}/>
         <TodoList todos={filteredTodos} onClick={onClick}/>
-        <p>
-          <FilterLink filter={'SHOW_ALL'} currentFilter={visibilityFilter}>All</FilterLink>{',  '}
-          <FilterLink filter={'SHOW_COMPLETED'} currentFilter={visibilityFilter}>Completed</FilterLink>{',  '}
-          <FilterLink filter={'SHOW_ACTIVE'} currentFilter={visibilityFilter}>Active</FilterLink>
-        </p>
+        <Footer visibilityFilter={visibilityFilter}/>
       </div>
     );
 };
