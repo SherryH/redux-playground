@@ -283,6 +283,16 @@ const Link = ({active, children, onFilterClick}) => {
 //Create the new FilterLink as a class container component
 class FilterLink extends React.Component {
 
+  componentDidMount(){
+    this.unsubscribe = todoStore.subscribe(()=>{
+      this.forceUpdate();
+    });
+  }
+
+  componentWillUnmount(){
+    this.unsubscribe();
+  }
+
   render(){
     const {filter, children} = this.props;
     const state = todoStore.getState();
@@ -294,7 +304,7 @@ class FilterLink extends React.Component {
       });
     };
     return(
-      <Link active={filter===state.filter} onFilterClick={this.onFilterClick}>
+      <Link active={filter===state.visibilityFilter} onFilterClick={onFilterClick}>
         {children}
       </Link>
     );
