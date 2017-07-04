@@ -269,13 +269,37 @@ const idGenerator = generateId();
 
 //content between JSX open/closing tags are passed as props.children
 // a link component dispatching filter action, rendering custom text passed beteen FilterText
-const FilterLink = ({filter, currentFilter, children, onFilterClick}) => {
-  if (currentFilter === filter) {
+
+//Have a presentational link component and filter link container
+const Link = ({active, children, onFilterClick}) => {
+  if (active) {
     return <span>{children}</span>
   }
   return (
     <a href='#' onClick={onFilterClick}>{children}</a>
   );
+}
+
+//Create the new FilterLink as a class container component
+class FilterLink extends React.Component {
+
+  render(){
+    const {filter, children} = this.props;
+    const state = todoStore.getState();
+    const onFilterClick = (e)=>{
+      e.preventDefault();
+      todoStore.dispatch({
+        type: "SET_VISIBILITY_FILTER",
+        filter
+      });
+    };
+    return(
+      <Link active={filter===state.filter} onFilterClick={this.onFilterClick}>
+        {children}
+      </Link>
+    );
+
+  }
 }
 
 // a function that filters the todos to display based on the filter state
@@ -328,12 +352,12 @@ const TodoPanel = ({onAddClick}) => {
   );
 };
 
-const Footer = ({visibilityFilter, onFilterClick}) => {
+const Footer = () => {
   return (
     <p>
-      <FilterLink filter={'SHOW_ALL'} currentFilter={visibilityFilter} onFilterClick={onFilterClick}>All</FilterLink>{',  '}
-      <FilterLink filter={'SHOW_COMPLETED'} currentFilter={visibilityFilter} onFilterClick={onFilterClick}>Completed</FilterLink>{',  '}
-      <FilterLink filter={'SHOW_ACTIVE'} currentFilter={visibilityFilter} onFilterClick={onFilterClick}>Active</FilterLink>
+      <FilterLink filter={'SHOW_ALL'} >All</FilterLink>{',  '}
+      <FilterLink filter={'SHOW_COMPLETED'} >Completed</FilterLink>{',  '}
+      <FilterLink filter={'SHOW_ACTIVE'} >Active</FilterLink>
     </p>
   );
 };
@@ -352,18 +376,12 @@ const TodoApp = ({todos, visibilityFilter}) => {
     });
     textInput.value = '';
   };
-  const onFilterClick = (e)=>{
-    e.preventDefault();
-    todoStore.dispatch({
-      type: "SET_VISIBILITY_FILTER",
-      filter
-    });
-  }
+
     return (
       <div>
         <TodoPanel onAddClick={onAddClick}/>
         <TodoList todos={filteredTodos} onClick={onClick}/>
-        <Footer visibilityFilter={visibilityFilter} onFilterClick={onFilterClick}/>
+        <Footer />
       </div>
     );
 };
