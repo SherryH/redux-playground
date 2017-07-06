@@ -372,12 +372,23 @@ const Footer = () => {
   );
 };
 
+// Separate TodoList into a separate VisibleTodo container and presenatational component
+class VisibleTodoList extends React.Component {
+  render(){
+    const {todos, visibilityFilter} = todoStore.getState();
+    const filteredTodos = getVisibleTodos(todos, visibilityFilter);
+    const onClick = (todo)=>{todoStore.dispatch({
+      type:'TOGGLE_TODO',
+      id: todo.id
+    });}
+    return (
+      <TodoList todos={filteredTodos} onClick={onClick}/>
+    )
+
+  }
+}
+
 const TodoApp = ({todos, visibilityFilter}) => {
-  const filteredTodos = getVisibleTodos(todos, visibilityFilter);
-  const onClick = (todo)=>{todoStore.dispatch({
-    type:'TOGGLE_TODO',
-    id: todo.id
-  });}
   const onAddClick = (textInput)=>{
     todoStore.dispatch({
       type: 'ADD_TODO',
@@ -390,7 +401,7 @@ const TodoApp = ({todos, visibilityFilter}) => {
     return (
       <div>
         <TodoPanel onAddClick={onAddClick}/>
-        <TodoList todos={filteredTodos} onClick={onClick}/>
+        <VisibleTodoList/>
         <Footer />
       </div>
     );
