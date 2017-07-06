@@ -374,6 +374,14 @@ const Footer = () => {
 
 // Separate TodoList into a separate VisibleTodo container and presenatational component
 class VisibleTodoList extends React.Component {
+  componentDidMount(){
+    this.unsubscribe = todoStore.subscribe(()=>{
+      this.forceUpdate();
+    });
+  }
+  componentWillUnmount(){
+    this.unsubscribe();
+  }
   render(){
     const {todos, visibilityFilter} = todoStore.getState();
     const filteredTodos = getVisibleTodos(todos, visibilityFilter);
@@ -388,7 +396,7 @@ class VisibleTodoList extends React.Component {
   }
 }
 
-const TodoApp = ({todos, visibilityFilter}) => {
+const TodoApp = () => {
   const onAddClick = (textInput)=>{
     todoStore.dispatch({
       type: 'ADD_TODO',
