@@ -351,8 +351,17 @@ const TodoList = ({todos, onClick}) => {
   );
 };
 
-const TodoPanel = ({onAddClick}) => {
+const TodoPanel = () => {
   let textInput = null;
+  const onAddClick = (textInput)=>{
+    todoStore.dispatch({
+      type: 'ADD_TODO',
+      text: textInput.value,
+      id: idGenerator.getId()
+    });
+    textInput.value = '';
+  };
+
   return (
     <div>
       <div>This is an todo app </div>
@@ -397,18 +406,10 @@ class VisibleTodoList extends React.Component {
 }
 
 const TodoApp = () => {
-  const onAddClick = (textInput)=>{
-    todoStore.dispatch({
-      type: 'ADD_TODO',
-      text: textInput.value,
-      id: idGenerator.getId()
-    });
-    textInput.value = '';
-  };
 
     return (
       <div>
-        <TodoPanel onAddClick={onAddClick}/>
+        <TodoPanel />
         <VisibleTodoList/>
         <Footer />
       </div>
