@@ -144,10 +144,29 @@ const testIncrementCounter = () => {
 testIncrementCounter();
 
 
+// Create the Provider component to pass down, store, to all children as context
+// the context is like a global variable
+class Provider extends React.Component {
+  static childContextTypes = {
+    store: React.PropTypes.object
+  };
 
+  getChildContext(){
+    return {
+      store: this.props.store
+    }
+  }
+  render() {
+    return this.props.children; //renders all children
+  }
+}
 
 // render a todo App
-render(<TodoApp store={todoStore}/>, document.getElementById('todoapp'));
+render(
+  <Provider store={todoStore}>
+    <TodoApp />
+  </Provider>
+  , document.getElementById('todoapp'));
 
 // //subscribe to the state change and update view
 // todoStore.subscribe(renderTodo);
