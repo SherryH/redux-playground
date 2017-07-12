@@ -284,7 +284,7 @@ const Link = ({active, children, onFilterClick}) => {
 class FilterLink extends React.Component {
 
   componentDidMount(){
-    this.unsubscribe = todoStore.subscribe(()=>{
+    this.unsubscribe = store.subscribe(()=>{
       this.forceUpdate();
     });
   }
@@ -295,10 +295,10 @@ class FilterLink extends React.Component {
 
   render(){
     const {filter, children} = this.props;
-    const state = todoStore.getState();
+    const state = store.getState();
     const onFilterClick = (e)=>{
       e.preventDefault();
-      todoStore.dispatch({
+      store.dispatch({
         type: "SET_VISIBILITY_FILTER",
         filter
       });
@@ -351,10 +351,10 @@ const TodoList = ({todos, onClick}) => {
   );
 };
 
-const TodoPanel = () => {
+const TodoPanel = ({store}) => {
   let textInput = null;
   const onAddClick = (textInput)=>{
-    todoStore.dispatch({
+    store.dispatch({
       type: 'ADD_TODO',
       text: textInput.value,
       id: idGenerator.getId()
@@ -371,12 +371,12 @@ const TodoPanel = () => {
   );
 };
 
-const Footer = () => {
+const Footer = ({store}) => {
   return (
     <p>
-      <FilterLink filter={'SHOW_ALL'} >All</FilterLink>{',  '}
-      <FilterLink filter={'SHOW_COMPLETED'} >Completed</FilterLink>{',  '}
-      <FilterLink filter={'SHOW_ACTIVE'} >Active</FilterLink>
+      <FilterLink filter={'SHOW_ALL'} store={store}>All</FilterLink>{',  '}
+      <FilterLink filter={'SHOW_COMPLETED'} store={store}>Completed</FilterLink>{',  '}
+      <FilterLink filter={'SHOW_ACTIVE'} store={store}>Active</FilterLink>
     </p>
   );
 };
@@ -384,7 +384,7 @@ const Footer = () => {
 // Separate TodoList into a separate VisibleTodo container and presenatational component
 class VisibleTodoList extends React.Component {
   componentDidMount(){
-    this.unsubscribe = todoStore.subscribe(()=>{
+    this.unsubscribe = store.subscribe(()=>{
       this.forceUpdate();
     });
   }
@@ -392,9 +392,9 @@ class VisibleTodoList extends React.Component {
     this.unsubscribe();
   }
   render(){
-    const {todos, visibilityFilter} = todoStore.getState();
+    const {todos, visibilityFilter} = store.getState();
     const filteredTodos = getVisibleTodos(todos, visibilityFilter);
-    const onClick = (todo)=>{todoStore.dispatch({
+    const onClick = (todo)=>{store.dispatch({
       type:'TOGGLE_TODO',
       id: todo.id
     });}
@@ -405,13 +405,13 @@ class VisibleTodoList extends React.Component {
   }
 }
 
-const TodoApp = () => {
+const TodoApp = ({store}) => {
 
     return (
       <div>
-        <TodoPanel />
-        <VisibleTodoList/>
-        <Footer />
+        <TodoPanel store={store}/>
+        <VisibleTodoList store={store}/>
+        <Footer store={store}/>
       </div>
     );
 };

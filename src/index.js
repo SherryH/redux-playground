@@ -147,7 +147,7 @@ testIncrementCounter();
 
 
 // render a todo App
-render(<TodoApp />, document.getElementById('todoapp'));
+render(<TodoApp store={todoStore}/>, document.getElementById('todoapp'));
 
 // //subscribe to the state change and update view
 // todoStore.subscribe(renderTodo);
