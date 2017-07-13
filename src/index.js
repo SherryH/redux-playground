@@ -1,6 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 import expect from 'expect';
+import { Provider } from 'react-redux';
 import deepFreeze from 'deep-freeze';
 // import { createStore } from 'redux';
 import {TodoApp, todoStore } from './Todo';
@@ -146,20 +147,20 @@ testIncrementCounter();
 
 // Create the Provider component to pass down, store, to all children as context
 // the context is like a global variable
-class Provider extends React.Component {
-  static childContextTypes = {
-    store: React.PropTypes.object
-  };
+// class Provider extends React.Component {
+//   static childContextTypes = {
+//     store: React.PropTypes.object
+//   };
 
-  getChildContext(){
-    return {
-      store: this.props.store
-    }
-  }
-  render() {
-    return this.props.children; //renders all children
-  }
-}
+//   getChildContext(){
+//     return {
+//       store: this.props.store
+//     }
+//   }
+//   render() {
+//     return this.props.children; //renders all children
+//   }
+// }
 
 // render a todo App
 render(
