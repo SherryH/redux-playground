@@ -225,17 +225,7 @@ console.log(todoStore.getState());
 console.log('---------------');
 console.log('');
 
-const generateId = () => {
-  let todoId = 4;
-  const obj = {};
-  obj.id = 4;
-  obj.getId = () => {
-    return obj.id++;
-  }
-  return obj;
-};
 
-const idGenerator = generateId();
 
 // class Todo extends React.Component {
 //   constructor(props){
@@ -268,18 +258,6 @@ const idGenerator = generateId();
 //   }
 // }
 
-//content between JSX open/closing tags are passed as props.children
-// a link component dispatching filter action, rendering custom text passed beteen FilterText
-
-//Have a presentational link component and filter link container
-const Link = ({active, children, onFilterClick}) => {
-  if (active) {
-    return <span>{children}</span>
-  }
-  return (
-    <a href='#' onClick={onFilterClick}>{children}</a>
-  );
-}
 
 //Create the new FilterLink as a class container component
 // class FilterLink extends React.Component {
@@ -319,6 +297,56 @@ const Link = ({active, children, onFilterClick}) => {
 //   }
 // }
 
+
+const generateId = () => {
+  let todoId = 4;
+  const obj = {};
+  obj.id = 4;
+  obj.getId = () => {
+    return obj.id++;
+  }
+  return obj;
+};
+
+const idGenerator = generateId();
+
+
+//Action Creator
+const setVisibilityFilter = (filter) => {
+  return {
+    type: "SET_VISIBILITY_FILTER",
+    filter
+  };
+};
+
+const addTodo = (text) => {
+  return {
+    type: 'ADD_TODO',
+    text,
+    id: idGenerator.getId()
+  }
+};
+
+const toggleTodoActionCreator = (todo) => {
+  return {
+    type:'TOGGLE_TODO',
+    id: todo.id
+  }
+};
+
+//content between JSX open/closing tags are passed as props.children
+// a link component dispatching filter action, rendering custom text passed beteen FilterText
+
+//Have a presentational link component and filter link container
+const Link = ({active, children, onFilterClick}) => {
+  if (active) {
+    return <span>{children}</span>
+  }
+  return (
+    <a href='#' onClick={onFilterClick}>{children}</a>
+  );
+}
+
 const mapStateToLinkProps = (state, ownProp) => {
   return {
     active: ownProp.filter === state.visibilityFilter
@@ -329,10 +357,7 @@ const mapDispatchToLinkProps = (dispatch, ownProps) => {
   return {
     onFilterClick: (e)=>{
       e.preventDefault();
-      dispatch({
-        type: "SET_VISIBILITY_FILTER",
-        filter: ownProp.filter
-      });
+      dispatch(setVisibilityFilter(ownProp.filter));
     }
   };
 };
@@ -378,11 +403,7 @@ const TodoList = ({todos, onClick}) => {
 let TodoPanel = ({ dispatch }) => {
   let textInput = null;
   const onAddClick = (textInput)=>{
-    dispatch({
-      type: 'ADD_TODO',
-      text: textInput.value,
-      id: idGenerator.getId()
-    });
+    dispatch(addTodo(textInput.value));
     textInput.value = '';
   };
 
@@ -453,10 +474,7 @@ const mapStateToTodoListProps = (state) => {
 
 const mapStateToTodoListDispatch = (dispatch) => {
   return {
-    onClick: (todo)=>{dispatch({
-      type:'TOGGLE_TODO',
-      id: todo.id
-    });}
+    onClick: (todo)=>{dispatch(toggleTodoActionCreator(todo));}
   };
 };
 
