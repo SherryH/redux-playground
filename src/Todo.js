@@ -2,6 +2,7 @@ import React from 'react';
 import expect from 'expect';
 import deepFreeze from 'deep-freeze';
 import { createStore, combineReducers } from 'redux';
+import {connect} from 'react-redux';
 
 
 //Avoid Object mutation
@@ -392,34 +393,51 @@ const Footer = () => {
 };
 
 // Separate TodoList into a separate VisibleTodo container and presenatational component
-class VisibleTodoList extends React.Component {
+// class VisibleTodoList extends React.Component {
 
-  static contextTypes = {
-    store: React.PropTypes.object
+//   static contextTypes = {
+//     store: React.PropTypes.object
+//   };
+//   componentDidMount(){
+//     const { store } = this.context;
+//     this.unsubscribe = store.subscribe(()=>{
+//       this.forceUpdate();
+//     });
+//   }
+//   componentWillUnmount(){
+//     this.unsubscribe();
+//   }
+//   render(){
+//     const { store } = this.context;
+//     const {todos, visibilityFilter} = store.getState();
+//     const filteredTodos = getVisibleTodos(todos, visibilityFilter);
+//     const onClick = (todo)=>{store.dispatch({
+//       type:'TOGGLE_TODO',
+//       id: todo.id
+//     });}
+//     return (
+//       <TodoList todos={filteredTodos} onClick={onClick}/>
+//     )
+
+//   }
+// }
+
+const mapStateToProps = (state) => {
+  return {
+    todos: getVisibleTodos(state.todos, state.visibilityFilter)
   };
-  componentDidMount(){
-    const { store } = this.context;
-    this.unsubscribe = store.subscribe(()=>{
-      this.forceUpdate();
-    });
-  }
-  componentWillUnmount(){
-    this.unsubscribe();
-  }
-  render(){
-    const { store } = this.context;
-    const {todos, visibilityFilter} = store.getState();
-    const filteredTodos = getVisibleTodos(todos, visibilityFilter);
-    const onClick = (todo)=>{store.dispatch({
+};
+
+const mapStateToDispatch = (dispatch) => {
+  return {
+    onClick: (todo)=>{dispatch({
       type:'TOGGLE_TODO',
       id: todo.id
     });}
-    return (
-      <TodoList todos={filteredTodos} onClick={onClick}/>
-    )
+  };
+};
 
-  }
-}
+const VisibleTodoList = connect(mapStateToProps,mapStateToDispatch)(TodoList);
 
 const TodoApp = () => {
 
